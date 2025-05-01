@@ -1,14 +1,63 @@
 "use client";
 
+/**
+ * useMembershipVerification Hook
+ *
+ * A custom React hook that handles verification of NFT-based memberships using Unlock Protocol.
+ * This hook manages the complex states involved in verifying membership status across
+ * different wallet types (EOA and Smart Contract Accounts).
+ *
+ * KEY FUNCTIONALITY:
+ *
+ * 1. WALLET INTEGRATION
+ *    - Supports both EOA (Externally Owned Account) wallets and SCA (Smart Contract Account) wallets
+ *    - Uses Account Kit for Smart Contract Account verification
+ *    - Automatically detects wallet type and performs appropriate verification
+ *
+ * 2. MEMBERSHIP VERIFICATION
+ *    - Connects with Unlock Protocol's Web3Service to check NFT membership status
+ *    - Checks balances and valid keys across configured locks
+ *    - Returns detailed membership information including lock details
+ *
+ * 3. STATE MANAGEMENT
+ *    - Tracks loading, error, and verification states
+ *    - Provides granular status information about membership validity
+ *    - Returns detailed information about discovered memberships
+ *
+ * USAGE PATTERN:
+ *
+ * ```tsx
+ * const {
+ *   isVerified,       // Has verification process completed
+ *   hasMembership,    // Does user have any valid membership
+ *   isLoading,        // Is verification in progress
+ *   error,            // Any verification errors
+ *   membershipDetails // Detailed array of membership information
+ * } = useMembershipVerification();
+ * ```
+ *
+ * ERROR HANDLING:
+ * Captures and surfaces various error states with standardized codes including:
+ * - BALANCE_CHECK_ERROR: Failed to check token balance
+ * - MEMBERSHIP_CHECK_ERROR: Failed to verify membership status
+ * - INVALID_ADDRESS: Provided wallet address is invalid
+ * - NO_VALID_ADDRESS: No wallet address available for verification
+ *
+ * DEPENDENCIES:
+ * - @account-kit/react: For wallet connection and user identification
+ * - Unlock Protocol SDK: For membership verification logic via unlockService
+ *
+ * @returns {MembershipStatus} The current membership status object
+ */
+
 import { useCallback, useEffect, useState } from "react";
 import { useUser, useSmartAccountClient } from "@account-kit/react";
-import type { UseSmartAccountClientResult } from "@account-kit/react";
 import {
   unlockService,
   type LockAddress,
   type LockAddressValue,
   type MembershipError,
-} from "../sdk/unlock/services";
+} from "@/lib/sdk/unlock/services";
 
 export interface MembershipDetails {
   name: LockAddress;

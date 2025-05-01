@@ -1,3 +1,79 @@
+/**
+ * # Developer Notes: useSessionKey.ts
+ *
+ * ## Overview
+ * A React hook that manages session keys for ERC-4337 smart accounts using Account Kit. Session keys enable delegated
+ * transaction permissions with configurable constraints, allowing controlled access from multiple devices without
+ * exposing the main wallet.
+ *
+ * ## Key Functions
+ *
+ * - **createSessionKey()**: Generates a new session key with private key, client, and entity ID
+ * - **useSessionKeyClient()**: Recreates client from existing session key private key and entity ID
+ * - **isInstalling**: Loading state during session key creation process
+ *
+ * ## Technical Implementation
+ *
+ * ### Session Key Permissions
+ * ```typescript
+ * SessionKeyPermissions {
+ *   isGlobal?: boolean        // Full access to account when true
+ *   allowedFunctions?: string[] // Specific function selectors that can be called
+ *   timeLimit?: number        // Expiration time in seconds
+ *   spendingLimit?: bigint    // Maximum token amount allowed to spend
+ *   allowedAddresses?: string[] // Addresses the key can interact with
+ * }
+ * ```
+ *
+ * ### How It Works
+ * 1. Creates a random private key using viem's generatePrivateKey()
+ * 2. Converts private key to LocalAccountSigner for signing transactions
+ * 3. Creates modular account client with session key configuration
+ * 4. Assigns sequential entity IDs (1, 2, 3...) for each session key
+ * 5. Stores session key details for later retrieval
+ *
+ * ### Error Handling
+ * - Validates smart account initialization before operations
+ * - Validates chain selection is complete
+ * - Verifies Alchemy API key availability
+ * - Provides descriptive error messages
+ *
+ * ## Dependencies
+ * - **Account Kit**: @account-kit/react, @account-kit/smart-contracts
+ * - **Account Abstraction**: @aa-sdk/core
+ * - **Blockchain**: viem/accounts
+ * - **Storage**: useSessionKeyStorage (custom hook)
+ * - **Environment**: Requires NEXT_PUBLIC_ALCHEMY_API_KEY
+ *
+ * ## Usage Examples
+ *
+ * ```typescript
+ * // Create a session key with spending limit
+ * const { createSessionKey } = useSessionKey({
+ *   permissions: {
+ *     spendingLimit: parseEther("0.1")
+ *   }
+ * });
+ *
+ * // Create key with function restrictions
+ * const { createSessionKey } = useSessionKey({
+ *   permissions: {
+ *     allowedFunctions: ["0x23b872dd"] // transferFrom selector
+ *   }
+ * });
+ *
+ * // Recreate client from stored key
+ * const { useSessionKeyClient } = useSessionKey();
+ * const client = await useSessionKeyClient(storedPrivateKey, storedEntityId);
+ * ```
+ *
+ * ## Security Considerations
+ * - Store session keys securely - compromise allows transactions within permissions
+ * - Set appropriate permission constraints for intended use cases
+ * - Consider time limits for temporary access scenarios
+ * - Monitor and revoke session keys when no longer needed
+ */
+
 import { useCallback, useState } from "react";
 import { useSmartAccountClient, useChain } from "@account-kit/react";
 import { generatePrivateKey } from "viem/accounts";

@@ -4,22 +4,22 @@
  * AccountDropdown Component
  *
  * This component serves as the primary user account interface for the application,
- * handling wallet connections, network switching, and Lit Protocol integrations.
+ * handling wallet connections, network switching, and session key management.
  *
  * KEY ARCHITECTURE NOTES:
  * 1. INTEGRATION POINTS:
  *    - Account Kit: For wallet connection and chain management
- *    - Lit Protocol: For programmable key pairs (PKPs) and session signatures
+ *    - Smart Account: For advanced account features and session key management
  *
  * 2. STATE MANAGEMENT:
- *    - EOA Signer: Required for Lit Protocol authentication (ECDSA signatures)
- *    - Unified Session Signer: Manages session authentication with Lit Protocol
- *    - Chain state: Handles network switching between supported chains
+ *    - EOA Signer: Standard external wallet connection (MetaMask, WalletConnect, etc.)
+ *    - Smart Account: Abstracted account with advanced features
+ *    - Chain state: Handles network switching between supported chains (Base, Optimism, BaseSepolia)
  *
  * 3. IMPORTANT WORKFLOWS:
- *    - Authentication: EOA signer must be initialized before Lit Protocol auth
- *    - Session Signatures: Required for Lit Protocol operations
- *    - Chain Switching: Changes the network for both Account Kit and Lit integrations
+ *    - Authentication: EOA wallet connection serves as controller for smart account
+ *    - Session Keys: Scoped permissions (time/token/address limited) for delegated transactions
+ *    - Chain Switching: Manages network state across all connected components
  */
 
 import { useState, useEffect } from "react";
@@ -312,7 +312,7 @@ export function AccountDropdown() {
         await navigator.clipboard.writeText(addressToCopy);
         setCopySuccess(true);
         setTimeout(() => setCopySuccess(false), 2000);
-      } catch {}
+      } catch { }
     }
   };
 
@@ -726,12 +726,12 @@ export function AccountDropdown() {
                             {key.permissions.isGlobal
                               ? "Global Access"
                               : key.permissions.timeLimit
-                              ? `Time Limited (${Math.floor(
+                                ? `Time Limited (${Math.floor(
                                   key.permissions.timeLimit / 3600
                                 )}h)`
-                              : key.permissions.spendingLimit
-                              ? `Spend Limited (${key.permissions.spendingLimit} ETH)`
-                              : "Limited Access"}
+                                : key.permissions.spendingLimit
+                                  ? `Spend Limited (${key.permissions.spendingLimit} ETH)`
+                                  : "Limited Access"}
                           </p>
                         </div>
                         <Button

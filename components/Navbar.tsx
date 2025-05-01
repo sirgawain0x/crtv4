@@ -47,7 +47,7 @@ import WertButton from "./wallet/buy/fund-button";
 import { TokenBalance } from "./wallet/balance/TokenBalance";
 import type { Chain as ViemChain } from "viem/chains";
 import { AccountDropdown } from "@/components/account-dropdown/AccountDropdown";
-import { useMembershipVerification } from "@/lib/hooks/useMembershipVerification";
+import { useMembershipVerification } from "@/lib/hooks/unlock/useMembershipVerification";
 import { MembershipSection } from "./account-dropdown/MembershipSection";
 
 type UseUserResult = (AccountUser & { type: "eoa" | "sca" }) | null;
@@ -302,11 +302,10 @@ export default function Navbar() {
   };
 
   // Create header className to avoid line length issues
-  const headerClassName = `sticky top-0 z-50 w-full transition-all duration-300 ${
-    isScrolled
+  const headerClassName = `sticky top-0 z-50 w-full transition-all duration-300 ${isScrolled
       ? "shadow-md bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm"
       : "bg-white dark:bg-gray-900"
-  }`;
+    }`;
 
   // Dialog content based on the selected action
   const getDialogContent = () => {
@@ -610,11 +609,10 @@ export default function Navbar() {
                             disabled={
                               isSettingChain || currentChain.id === chain.id
                             }
-                            className={`flex items-center justify-start space-x-2 ${
-                              currentChain.id === chain.id
+                            className={`flex items-center justify-start space-x-2 ${currentChain.id === chain.id
                                 ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
                                 : ""
-                            }`}
+                              }`}
                           >
                             <Image
                               src={getChainLogo(chain)}

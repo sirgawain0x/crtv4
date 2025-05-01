@@ -1,3 +1,38 @@
+/**
+ * Unlock Protocol Integration Service
+ * ===================================
+ *
+ * This module provides integration with Unlock Protocol for NFT-based memberships.
+ * Unlock Protocol is a protocol for membership NFTs that can be used for access control.
+ *
+ * Key Features:
+ * - Connects to Unlock Protocol smart contracts on Base mainnet
+ * - Verifies membership validity using on-chain data
+ * - Retrieves NFT metadata for memberships
+ * - Supports checking memberships across multiple locks
+ *
+ * Configuration:
+ * - Uses Viem for Web3 interactions (modern, type-safe ethereum library)
+ * - Supports fallback RPC providers for reliability
+ * - Preconfigured with Creative Pass locks on Base
+ *
+ * Usage Examples:
+ * ```typescript
+ * // Check if user has valid membership for a specific lock
+ * const isValid = await unlockService.hasValidMembership(lockAddress, userAddress);
+ *
+ * // Get all memberships for a user across all configured locks
+ * const memberships = await unlockService.getAllMemberships(userAddress);
+ * ```
+ *
+ * Implementation Notes:
+ * - Uses the official Unlock Protocol ABIs for type safety and correctness
+ * - Implements proper error handling with context for debugging
+ * - Avoids unnecessary RPC calls when possible for performance
+ *
+ * @see https://docs.unlock-protocol.com/ for Unlock Protocol documentation
+ */
+
 // services/unlock.ts
 import { Web3Service } from "@unlock-protocol/unlock-js";
 import PublicLockV14Json from "@unlock-protocol/contracts/dist/abis/PublicLock/PublicLockV14.json";

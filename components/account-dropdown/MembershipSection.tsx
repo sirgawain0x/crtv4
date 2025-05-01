@@ -1,8 +1,30 @@
+"use client";
+/**
+ * MembershipSection Component
+ *
+ * This component handles membership verification and display within the account dropdown,
+ * providing users with visual feedback about their membership status.
+ *
+ * KEY ARCHITECTURE NOTES:
+ * 1. INTEGRATION POINTS:
+ *    - Unlock Protocol: Verifies NFT-based memberships across supported chains
+ *    - Authentication: Connects with wallet verification for membership validation
+ * 
+ * 2. STATE MANAGEMENT:
+ *    - Membership Verification: Checks token ownership against Unlock Protocol locks
+ *    - Error Handling: Comprehensive error states with user-friendly messages
+ *    - Loading States: Provides feedback during verification processes
+ *
+ * 3. USER WORKFLOWS:
+ *    - Verification: Wallet connection → Token verification → Status display
+ *    - Membership Acquisition: Redirects users to membership purchase portal
+ *    - Status Display: Shows different UI based on verification/membership status
+ */
 import { Button } from "@/components/ui/button";
 import {
   useMembershipVerification,
   type MembershipDetails,
-} from "../../lib/hooks/useMembershipVerification";
+} from "@/lib/hooks/unlock/useMembershipVerification";
 import { LoginWithEthereumButton } from "@/components/auth/LoginWithEthereumButton";
 import {
   Loader2,
@@ -112,7 +134,7 @@ export function MembershipSection({ className }: MembershipSectionProps) {
                 className="flex items-center justify-between text-xs"
               >
                 <span className="text-muted-foreground">
-                  {MEMBERSHIP_NAMES[address]}
+                  {MEMBERSHIP_NAMES[address as keyof typeof MEMBERSHIP_NAMES] || name || "Unknown Membership"}
                 </span>
                 <span className="font-medium">
                   {lock?.name || "Active"}
