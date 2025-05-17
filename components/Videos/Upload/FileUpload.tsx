@@ -272,10 +272,10 @@ const FileUpload: React.FC<FileUploadProps> = ({
   }
 
   return (
-    <div className="min-h-screen w-full bg-white">
+    <div className="min-h-screen w-full bg-background">
       <div className="mx-auto flex min-h-[calc(100vh-200px)] max-w-4xl flex-col px-4 py-8">
-        <div className="flex-1 rounded-lg bg-white p-6 shadow-lg sm:p-8">
-          <h1 className="mb-8 text-center text-2xl font-semibold text-gray-900">
+        <div className="flex-1 rounded-lg bg-card p-6 shadow-lg sm:p-8">
+          <h1 className="mb-8 text-center text-2xl font-semibold text-foreground">
             Upload A File
           </h1>
 
@@ -284,7 +284,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
             <div className="space-y-2">
               <label
                 htmlFor="file-upload"
-                className="block text-sm font-medium text-gray-700"
+                className="block text-sm font-medium text-foreground"
               >
                 Choose A File To Upload:
               </label>
@@ -292,9 +292,9 @@ const FileUpload: React.FC<FileUploadProps> = ({
                 type="file"
                 id="file-upload"
                 accept="video/*"
-                className="file:border-1 block w-full rounded-lg border border-gray-200 text-sm text-[#EC407A] 
-                file:mr-4 file:cursor-pointer file:rounded-full file:border-0 file:bg-white file:px-4 file:py-2 file:text-sm 
-                file:font-semibold file:text-[#EC407A] hover:file:bg-gray-50"
+                className="file:border-1 block w-full rounded-lg border border-border text-sm text-primary 
+                file:mr-4 file:cursor-pointer file:rounded-full file:border-0 file:bg-background file:px-4 file:py-2 file:text-sm 
+                file:font-semibold file:text-primary hover:file:bg-muted"
                 data-testid="file-upload-input"
                 onChange={handleFileChange}
               />
@@ -304,16 +304,16 @@ const FileUpload: React.FC<FileUploadProps> = ({
             {selectedFile && (
               <div className="space-y-8">
                 <div className="text-center">
-                  <p className="text-sm font-medium text-gray-500">
+                  <p className="text-sm font-medium text-foreground">
                     Selected File
                   </p>
-                  <p className="mt-1 text-base text-gray-900">
+                  <p className="mt-1 text-base text-foreground">
                     {selectedFile.name}
                   </p>
                 </div>
 
                 {/* Video Preview */}
-                <div className="overflow-hidden rounded-lg border border-gray-200">
+                <div className="overflow-hidden rounded-lg border border-border">
                   <PreviewVideo video={selectedFile} />
                 </div>
 
@@ -323,11 +323,11 @@ const FileUpload: React.FC<FileUploadProps> = ({
                     <button
                       onClick={handleFileUpload}
                       disabled={!selectedFile}
-                      className={`${
+                      className={`$${
                         !selectedFile
-                          ? "cursor-not-allowed bg-[#D63A6A] opacity-50"
-                          : "bg-[#EC407A] hover:bg-[#D63A6A]"
-                      } w-full max-w-xs rounded-lg px-6 py-3 font-semibold text-white shadow-sm transition-colors sm:w-auto`}
+                          ? "cursor-not-allowed bg-primary opacity-50"
+                          : "bg-primary hover:bg-primary/80"
+                      } w-full max-w-xs rounded-lg px-6 py-3 font-semibold text-primary-foreground shadow-sm transition-colors sm:w-auto`}
                       data-testid="file-input-upload-button"
                     >
                       Upload File
@@ -337,14 +337,14 @@ const FileUpload: React.FC<FileUploadProps> = ({
                       <Progress
                         value={progress}
                         max={100}
-                        className="h-2 w-full overflow-hidden rounded-full bg-gray-100"
+                        className="h-2 w-full overflow-hidden rounded-full bg-muted"
                       >
                         <div
-                          className="h-full bg-[#EC407A] transition-all duration-500 ease-in-out"
+                          className="h-full bg-primary transition-all duration-500 ease-in-out"
                           style={{ width: `${progress}%` }}
                         />
                       </Progress>
-                      <p className="text-center text-sm text-gray-600">
+                      <p className="text-center text-sm text-muted-foreground">
                         {uploadState === "complete"
                           ? "Upload Complete!"
                           : `${progress}% uploaded`}
@@ -357,26 +357,26 @@ const FileUpload: React.FC<FileUploadProps> = ({
 
             {/* Error Message */}
             {error && (
-              <div className="rounded-lg bg-red-50 p-4">
-                <p className="text-sm text-red-600">{error}</p>
+              <div className="rounded-lg bg-destructive/10 p-4">
+                <p className="text-sm text-destructive-foreground">{error}</p>
               </div>
             )}
 
             {/* Success Message */}
             {uploadedUri && (
-              <div className="rounded-lg border border-green-200 bg-green-50 p-4">
-                <p className="flex items-center gap-2 text-sm text-green-700">
+              <div className="rounded-lg border border-green-200 bg-green-50 dark:bg-green-900 p-4">
+                <p className="flex items-center gap-2 text-sm text-green-700 dark:text-green-200">
                   <span>File uploaded successfully! IPFS URI:</span>
                   <Link
                     href={uploadedUri}
                     target="_blank"
-                    className="text-green-600 underline hover:text-green-800"
+                    className="text-green-600 underline hover:text-green-800 dark:text-green-300 dark:hover:text-green-400"
                   >
                     {truncateUri(uploadedUri)}
                   </Link>
                   <button
                     onClick={() => copyToClipboard(uploadedUri)}
-                    className="inline-flex items-center gap-1 rounded-md p-1 text-green-600 hover:bg-green-100 hover:text-green-800"
+                    className="inline-flex items-center gap-1 rounded-md p-1 text-green-600 hover:bg-green-100 hover:text-green-800 dark:text-green-300 dark:hover:bg-green-800 dark:hover:text-green-100"
                   >
                     <CopyIcon className="h-4 w-4" />
                     <span className="text-xs">Copy</span>
@@ -400,12 +400,12 @@ const FileUpload: React.FC<FileUploadProps> = ({
                 : "Process Subtitles"}
             </Button>
             {subtitleProcessingComplete && (
-              <span className="text-green-600 text-sm">
+              <span className="text-green-600 dark:text-green-300 text-sm">
                 Subtitles processed and uploaded.
               </span>
             )}
             {!subtitleProcessingComplete && (
-              <span className="text-gray-500 text-xs">
+              <span className="text-muted-foreground text-xs">
                 You can process subtitles now or later.
               </span>
             )}

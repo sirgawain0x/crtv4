@@ -49,7 +49,7 @@ const CreateThumbnailForm = ({
     setValue,
   } = useForm<FormValues>({
     defaultValues: {
-      aiModel: "SG161222/RealVisXL_V4.0_Lightning",
+      aiModel: "",
       prompt: "",
       nftConfig: {
         isMintable: false,
@@ -135,7 +135,7 @@ const CreateThumbnailForm = ({
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                <SelectLabel>Model</SelectLabel>
+                <SelectLabel>AI Models</SelectLabel>
                 <SelectItem value="SG161222/RealVisXL_V4.0_Lightning">
                   RealVisXL
                 </SelectItem>
@@ -163,7 +163,7 @@ const CreateThumbnailForm = ({
         )}
       />
       {errors.aiModel && (
-        <p className="text-red-500">{errors.aiModel.message}</p>
+        <p className="text-destructive">{errors.aiModel.message}</p>
       )}
 
       {/* Add a prompt input field */}
@@ -181,10 +181,18 @@ const CreateThumbnailForm = ({
           />
         )}
       />
-      {errors.prompt && <p className="text-red-500">{errors.prompt.message}</p>}
+      <Button type="submit" disabled={isSubmitting}>
+        <SparklesIcon className="mr-1 h-4 w-4" />
+        {isSubmitting ? "Generating..." : "Generate"}
+      </Button>
+      {errors.prompt && (
+        <p className="text-destructive">{errors.prompt.message}</p>
+      )}
 
-      <div className="mt-8 space-y-4 border-t pt-4">
-        <h3 className="text-lg font-semibold">NFT Configuration</h3>
+      <div className="mt-8 space-y-4 border-t border-border pt-4">
+        <h3 className="text-lg font-semibold text-foreground">
+          NFT Configuration
+        </h3>
 
         <div className="flex items-center space-x-2">
           <Controller
@@ -218,7 +226,7 @@ const CreateThumbnailForm = ({
                   )}
                 />
                 {errors.nftConfig?.maxSupply && (
-                  <p className="text-sm text-red-500">
+                  <p className="text-sm text-destructive">
                     {errors.nftConfig.maxSupply.message}
                   </p>
                 )}
@@ -243,7 +251,7 @@ const CreateThumbnailForm = ({
                   )}
                 />
                 {errors.nftConfig?.price && (
-                  <p className="text-sm text-red-500">
+                  <p className="text-sm text-destructive">
                     {errors.nftConfig.price.message}
                   </p>
                 )}
@@ -251,25 +259,40 @@ const CreateThumbnailForm = ({
             </div>
 
             <div className="space-y-2">
-              <Label>Royalty Percentage</Label>
+              <Label>Royalty (Basis Points)</Label>
               <Controller
                 name="nftConfig.royaltyPercentage"
                 control={control}
                 rules={{
-                  required: "Royalty percentage is required",
-                  min: { value: 0, message: "Minimum royalty is 0%" },
-                  max: { value: 100, message: "Maximum royalty is 100%" },
+                  required: "Royalty is required",
+                  min: { value: 0, message: "Minimum royalty is 0 bps" },
+                  max: {
+                    value: 10000,
+                    message: "Maximum royalty is 10,000 bps (100%)",
+                  },
                 }}
                 render={({ field }) => (
                   <Input
                     type="number"
+                    placeholder="e.g. 500 for 5%"
                     {...field}
                     onChange={(e) => field.onChange(Number(e.target.value))}
                   />
                 )}
               />
+              <p className="text-xs text-muted-foreground">
+                1% = 100 bps. 10,000 bps = 100%.
+              </p>
+              {/* Show live conversion from bps to percent */}
+              {typeof watch("nftConfig.royaltyPercentage") === "number" &&
+                !isNaN(watch("nftConfig.royaltyPercentage")) && (
+                  <p className="text-xs text-muted-foreground">
+                    {watch("nftConfig.royaltyPercentage")} bps ={" "}
+                    {(watch("nftConfig.royaltyPercentage") / 100).toFixed(2)}%
+                  </p>
+                )}
               {errors.nftConfig?.royaltyPercentage && (
-                <p className="text-sm text-red-500">
+                <p className="text-sm text-destructive">
                   {errors.nftConfig.royaltyPercentage.message}
                 </p>
               )}
@@ -278,20 +301,18 @@ const CreateThumbnailForm = ({
         )}
       </div>
 
-      <Button type="submit" disabled={isSubmitting}>
-        <SparklesIcon className="mr-1 h-4 w-4" />
-        {isSubmitting ? "Generating..." : "Generate"}
-      </Button>
-
       {errors["root"] && (
-        <p className="text-red-500">{errors["root"].message}</p>
+        <p className="text-destructive">{errors["root"].message}</p>
       )}
 
       {/* Render Skeletons while loading */}
       {loading ? (
         <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
           {Array.from({ length: 4 }).map((_, idx) => (
-            <Skeleton key={idx} className="rounded-md w-full h-[200px]" />
+            <Skeleton
+              key={idx}
+              className="rounded-md w-full h-[200px] bg-muted"
+            />
           ))}
         </div>
       ) : (
@@ -304,7 +325,7 @@ const CreateThumbnailForm = ({
           className="mt-4 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4"
         >
           {imagesUrl.length === 0 && (
-            <p className="col-span-full text-center text-gray-500">
+            <p className="col-span-full text-center text-muted-foreground">
               No images generated yet.
             </p>
           )}
@@ -321,7 +342,7 @@ const CreateThumbnailForm = ({
                   alt={`Thumbnail ${idx + 1}`}
                   width={200}
                   height={200}
-                  className="rounded-md border object-cover"
+                  className="rounded-md border border-border object-cover bg-background"
                 />
               </Label>
             </div>

@@ -104,18 +104,18 @@ export default function CreateThumbnail({
   };
 
   return (
-    <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 bg-background">
       <div className="my-6 text-center">
-        <h4 className="text-2xl font-bold">Almost Done...</h4>
+        <h4 className="text-2xl font-bold text-foreground">Almost Done...</h4>
       </div>
       <div className="my-4">
-        <h3 className="text-lg">
+        <h3 className="text-lg text-foreground">
           Video Transcoding: {String(livepeerAssetData?.status?.phase)}
         </h3>
       </div>
       {livepeerAssetData?.status?.phase !== "ready" && (
         <div className="my-6">
-          <Skeleton className="w-full aspect-video rounded-lg" />
+          <Skeleton className="w-full aspect-video rounded-lg bg-muted" />
         </div>
       )}
       {livepeerAssetData?.status?.phase === "ready" && livepeerPlaybackData && (

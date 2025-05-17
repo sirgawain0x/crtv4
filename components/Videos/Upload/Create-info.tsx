@@ -59,7 +59,7 @@ const CreateInfo = ({ onPressNext }: TCreateInfoProps) => {
           <Input
             id="title"
             placeholder="Rick Astley - Never Gonna Give You Up (Official Music Video)"
-            className="mt-2 h-12 w-full rounded-md border border-[#444752] p-2 text-gray-600 placeholder:text-gray-400 focus:outline-none"
+            className="mt-2 h-12 w-full rounded-md border border-border p-2 text-foreground placeholder:text-muted-foreground focus:outline-none"
             data-testid="create-info-title"
             {...form.register("title", {
               required: true,
@@ -71,7 +71,7 @@ const CreateInfo = ({ onPressNext }: TCreateInfoProps) => {
           placeholder="Never Gonna Give You Up was a global smash on its release in July 1987, topping the charts in 25 countries 
           including Rick's native UK and the US Billboard Hot 100.  It also won the Brit Award for Best single in 1988. 
           Stock Aitken and Waterman wrote and produced the track which was the lead-off single and lead track from Rick's debut LP "
-          className="mt-2 h-32 w-full rounded-md border border-[#444752] p-2 text-gray-600 placeholder:text-gray-400 focus:outline-none"
+          className="mt-2 h-32 w-full rounded-md border border-border p-2 text-foreground placeholder:text-muted-foreground focus:outline-none"
           data-testid="create-info-description"
           {...form.register("description", {
             required: true,
@@ -83,7 +83,7 @@ const CreateInfo = ({ onPressNext }: TCreateInfoProps) => {
             <Input
               type="text"
               placeholder="New York - United States"
-              className="mt-2 h-12 w-full rounded-md border border-[#444752] p-2 text-gray-600 placeholder:text-gray-400 focus:outline-none"
+              className="mt-2 h-12 w-full rounded-md border border-border p-2 text-foreground placeholder:text-muted-foreground focus:outline-none"
               data-testid="create-info-location"
               {...form.register("location", {
                 required: false,
